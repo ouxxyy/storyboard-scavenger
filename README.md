@@ -2,7 +2,9 @@
 
 > 把混乱创意清理成可拍摄的 AI 视频分镜。
 
-![Storyboard Scavenger 可视化总览](visual-guide-fullpage.png)
+<p align="center">
+  <img src="img-hero.png" alt="Storyboard Scavenger" width="720">
+</p>
 
 ---
 
@@ -15,7 +17,9 @@
 - **38 种运镜技巧库**（含参数：焦距、光圈、速度、方向）
 - **电影参考锚点**（每个分镜必须锚定电影风格 DNA）
 
-![分镜七要素](screenshot-elements.png)
+<p align="center">
+  <img src="img-compare.png" alt="痛点 vs 解决方案" width="720">
+</p>
 
 ## 支持平台
 
@@ -25,6 +29,10 @@
 | **Seedance（即梦）** | ≤15s | 中文 + `@素材` 语法 | 多模态组合，视频延长 |
 
 ## 核心工作流
+
+<p align="center">
+  <img src="img-workflow.png" alt="五步工作流" width="720">
+</p>
 
 ```
 Step 0: 确认目标平台（Kling / Seedance）
@@ -38,9 +46,11 @@ Step 3: 输出七要素分镜（平台映射 + 标准模板）
 Step 4: 优化建议 + 特殊镜头技巧
 ```
 
-![五步工作流](screenshot-hero.png)
-
 ## 七要素结构（每个分镜必须完整）
+
+<p align="center">
+  <img src="img-elements.png" alt="分镜七要素" width="720">
+</p>
 
 | 要素 | 说明 | 示例 |
 |------|------|------|
@@ -57,6 +67,10 @@ Step 4: 优化建议 + 特殊镜头技巧
 多分镜视频最常见的翻车点 = **环境跳变**（分镜1暖光木地板 → 分镜2冷光水泥地）。
 
 **解决方案**：在正式分镜前先生成一张纯环境锚点图，所有后续分镜的环境要素必须与此帧对齐。
+
+<p align="center">
+  <img src="img-scene.png" alt="场景建立帧机制" width="720">
+</p>
 
 ```
 场景建立帧 → 定义空间布局/光源色温/色调/材质/道具/天气
@@ -89,6 +103,10 @@ Step 4: 优化建议 + 特殊镜头技巧
 ## 可视化说明
 
 打开 [`visual-guide.html`](visual-guide.html) 查看带动画的交互式 Skill 说明页（电影感暗色调，双击即可在浏览器中打开）。
+
+<p align="center">
+  <img src="img-platforms.png" alt="支持平台" width="720">
+</p>
 
 ## 版本历史
 
