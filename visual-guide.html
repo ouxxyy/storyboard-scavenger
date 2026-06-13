@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>Storyboard Scavenger — AI 视频分镜 Skill</title>
+<style>
+/* ========== RESET & BASE ========== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: #0a0a0a;
+  color: #d4d4d4;
+  font-family: -apple-system, "PingFang SC", "Noto Sans SC", "Helvetica Neue", sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ========== VARIABLES ========== */
+:root {
+  --bg: #0a0a0a;
+  --bg-elevated: #141414;
+  --bg-card: #1a1a1a;
+  --accent: #E8773A;
+  --accent-dim: rgba(232,119,58,0.15);
+  --accent-glow: rgba(232,119,58,0.3);
+  --text-primary: #f0f0f0;
+  --text-secondary: #888;
+  --text-muted: #555;
+  --border: #2a2a2a;
+  --white: #fff;
+}
+
+/* ========== LAYOUT ========== */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 60px; }
+
+/* ========== SECTION TITLES ========== */
+.section-label {
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.section-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.2;
+  margin-bottom: 40px;
+}
+
+/* ========== HERO ========== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, var(--accent-dim) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-content {
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+.hero-badge {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  padding: 6px 20px;
+  margin-bottom: 32px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.2s forwards;
+}
+.hero-title {
+  font-size: 72px;
+  font-weight: 900;
+  color: var(--text-primary);
+  letter-spacing: -2px;
+  margin-bottom: 20px;
+  position: relative;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.4s forwards;
+}
+.hero-title::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 3px;
+  background: var(--accent);
+  animation: lineExpand 0.8s ease 1s forwards;
+}
+.hero-sub {
+  font-size: 20px;
+  color: var(--text-secondary);
+  font-weight: 300;
+  max-width: 560px;
+  margin: 0 auto;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.6s forwards;
+}
+/* Light sweep */
+.hero-title span {
+  background: linear-gradient(90deg, var(--text-primary) 0%, var(--text-primary) 40%, var(--accent) 50%, var(--text-primary) 60%, var(--text-primary) 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: lightSweep 2s ease 1.2s;
+}
+.hero-scroll-hint {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  animation: fadeUp 0.6s ease 1.5s forwards;
+}
+.hero-scroll-hint svg { animation: bounce 2s ease infinite; }
+
+/* ========== PROBLEM vs SOLUTION ========== */
+.section-compare {
+  padding: 100px 0;
+  position: relative;
+}
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 80px 1fr;
+  gap: 0;
+  align-items: stretch;
+}
+.compare-side {
+  padding: 40px;
+}
+.compare-side.pain { background: var(--bg-elevated); border: 1px solid var(--border); }
+.compare-side.solution { background: var(--bg-elevated); border: 1px solid var(--accent); border-width: 1px 1px 1px 0; }
+.compare-bridge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.compare-bridge svg { animation: pulseRight 2s ease infinite; }
+.compare-side-label {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+.compare-side.pain .compare-side-label { color: #c44; }
+.compare-side.solution .compare-side-label { color: var(--accent); }
+
+.compare-flow-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.compare-flow-item:last-child { border-bottom: none; }
+.flow-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.flow-text { font-size: 15px; color: var(--text-secondary); }
+.flow-text strong { color: var(--text-primary); font-weight: 600; }
+
+/* Chaos lines SVG animation */
+.chaos-lines line {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: drawLine 1.5s ease forwards;
+}
+.chaos-lines line:nth-child(2) { animation-delay: 0.3s; }
+.chaos-lines line:nth-child(3) { animation-delay: 0.6s; }
+.chaos-lines line:nth-child(4) { animation-delay: 0.9s; }
+
+/* Clean grid animation */
+.clean-grid rect {
+  opacity: 0;
+  animation: fadeInRect 0.4s ease forwards;
+}
+.clean-grid rect:nth-child(1) { animation-delay: 0.2s; }
+.clean-grid rect:nth-child(2) { animation-delay: 0.35s; }
+.clean-grid rect:nth-child(3) { animation-delay: 0.5s; }
+.clean-grid rect:nth-child(4) { animation-delay: 0.65s; }
+.clean-grid rect:nth-child(5) { animation-delay: 0.8s; }
+.clean-grid rect:nth-child(6) { animation-delay: 0.95s; }
+
+/* ========== WORKFLOW ========== */
+.section-workflow { padding: 100px 0; }
+.workflow-track {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  position: relative;
+  gap: 0;
+}
+.workflow-track::before {
+  content: '';
+  position: absolute;
+  top: 32px;
+  left: 60px;
+  right: 60px;
+  height: 2px;
+  background: var(--border);
+  z-index: 0;
+}
+.workflow-track::after {
+  content: '';
+  position: absolute;
+  top: 32px;
+  left: 60px;
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  z-index: 1;
+  animation: trackFill 2s ease 0.5s forwards;
+}
+.wf-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 180px;
+  position: relative;
+  z-index: 2;
+  cursor: default;
+}
+.wf-node {
+  width: 64px;
+  height: 64px;
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  transition: border-color 0.3s, background 0.3s;
+}
+.wf-step:hover .wf-node {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+.wf-num {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.wf-label {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+  margin-bottom: 6px;
+}
+.wf-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.5;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.3s ease, margin 0.3s ease;
+}
+.wf-step:hover .wf-desc {
+  max-height: 80px;
+  opacity: 1;
+  margin-top: 4px;
+}
+
+/* ========== SEVEN ELEMENTS ========== */
+.section-elements { padding: 100px 0; }
+.elements-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12px;
+}
+.elem-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 28px 16px;
+  text-align: center;
+  transition: border-color 0.3s, transform 0.3s;
+  opacity: 0;
+  transform: translateY(20px);
+}
+.elem-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s;
+}
+.elem-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+}
+.elem-icon {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.elem-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+.elem-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* ========== SCENE FRAME MECHANISM ========== */
+.section-scene { padding: 100px 0; }
+.scene-demo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 40px;
+}
+.scene-panel {
+  padding: 32px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+}
+.scene-panel-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+}
+.scene-panel.before .scene-panel-title { color: #c44; }
+.scene-panel.after .scene-panel-title { color: var(--accent); }
+
+.scene-frames {
+  display: flex;
+  gap: 8px;
+}
+.scene-frame {
+  flex: 1;
+  height: 100px;
+  position: relative;
+  overflow: hidden;
+}
+.scene-frame-bar {
+  position: absolute;
+  inset: 0;
+}
+.scene-frame-label {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  font-size: 10px;
+  color: rgba(255,255,255,0.6);
+}
+
+/* Before animation: mismatched colors */
+.scene-panel.before .scene-frame:nth-child(1) .scene-frame-bar { background: #8b2020; animation: colorFlicker1 3s ease infinite; }
+.scene-panel.before .scene-frame:nth-child(2) .scene-frame-bar { background: #20608b; animation: colorFlicker2 3s ease infinite 0.5s; }
+.scene-panel.before .scene-frame:nth-child(3) .scene-frame-bar { background: #6b208b; animation: colorFlicker3 3s ease infinite 1s; }
+.scene-panel.before .scene-frame:nth-child(4) .scene-frame-bar { background: #208b50; animation: colorFlicker1 3s ease infinite 1.5s; }
+
+/* After animation: unified palette */
+.scene-panel.after .scene-frame-bar {
+  background: var(--accent);
+  opacity: 0;
+  animation: unifiedFadeIn 0.6s ease forwards;
+}
+.scene-panel.after .scene-frame:nth-child(1) .scene-frame-bar { animation-delay: 0.2s; background: #E8773A; }
+.scene-panel.after .scene-frame:nth-child(2) .scene-frame-bar { animation-delay: 0.5s; background: #c46030; }
+.scene-panel.after .scene-frame:nth-child(3) .scene-frame-bar { animation-delay: 0.8s; background: #d97040; }
+.scene-panel.after .scene-frame:nth-child(4) .scene-frame-bar { animation-delay: 1.1s; background: #b85a2a; }
+
+.scene-anchor {
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: var(--accent-dim);
+  border: 1px solid var(--accent);
+  font-size: 13px;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  animation: fadeUp 0.6s ease 1.4s forwards;
+}
+.scene-anchor svg { flex-shrink: 0; }
+
+/* ========== PLATFORMS ========== */
+.section-platforms { padding: 100px 0; }
+.platforms-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.platform-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 32px;
+  transition: border-color 0.3s;
+}
+.platform-card:hover { border-color: var(--accent); }
+.platform-name {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.platform-duration {
+  font-size: 14px;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+.platform-specs { list-style: none; }
+.platform-specs li {
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+}
+.platform-specs li:last-child { border-bottom: none; }
+.platform-specs li span { color: var(--text-primary); font-weight: 600; }
+
+/* ========== FOOTER ========== */
+footer {
+  padding: 48px 0;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+.footer-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 16px;
+}
+.footer-links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.footer-links a:hover { color: var(--accent); }
+.footer-copy {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ========== ANIMATIONS ========== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes lineExpand {
+  from { width: 0; }
+  to { width: 120px; }
+}
+@keyframes lightSweep {
+  0% { background-position: 200% center; }
+  100% { background-position: 0% center; }
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+@keyframes pulseRight {
+  0%, 100% { transform: translateX(0); opacity: 1; }
+  50% { transform: translateX(4px); opacity: 0.6; }
+}
+@keyframes drawLine {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes fadeInRect {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes trackFill {
+  from { width: 0; }
+  to { width: calc(100% - 120px); }
+}
+@keyframes colorFlicker1 {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; background: #555; }
+}
+@keyframes colorFlicker2 {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; background: #666; }
+}
+@keyframes colorFlicker3 {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; background: #444; }
+}
+@keyframes unifiedFadeIn {
+  from { opacity: 0; transform: scaleY(0.3); }
+  to { opacity: 1; transform: scaleY(1); }
+}
+
+/* Scroll reveal base */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">AI Video Storyboard Skill</div>
+    <h1 class="hero-title"><span>Storyboard Scavenger</span></h1>
+    <p class="hero-sub">把混乱创意清理成可拍摄的 AI 视频分镜</p>
+  </div>
+  <div class="hero-scroll-hint">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2">
+      <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ==================== PAIN vs SOLUTION ==================== -->
+<section class="section-compare">
+  <div class="container">
+    <div class="section-label reveal">对比</div>
+    <h2 class="section-title reveal">从混乱到可控</h2>
+    <div class="compare-grid reveal">
+      <!-- LEFT: Pain -->
+      <div class="compare-side pain">
+        <div class="compare-side-label">痛点</div>
+        <div class="compare-flow-item">
+          <div class="flow-icon">
+            <svg class="chaos-lines" width="36" height="36" viewBox="0 0 36 36">
+              <line x1="4" y1="6" x2="32" y2="28" stroke="#c44" stroke-width="1.5"/>
+              <line x1="8" y1="30" x2="28" y2="4" stroke="#c44" stroke-width="1.5"/>
+              <line x1="2" y1="18" x2="34" y2="14" stroke="#c44" stroke-width="1.5"/>
+              <line x1="18" y1="2" x2="16" y2="34" stroke="#c44" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <div class="flow-text"><strong>混乱的创意</strong><br>想法碎片化，无从下手</div>
+        </div>
+        <div class="compare-flow-item">
+          <div class="flow-icon">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+              <circle cx="18" cy="18" r="14" stroke="#c44" stroke-width="1.5" stroke-dasharray="4 4"/>
+              <text x="18" y="21" text-anchor="middle" font-size="10" fill="#c44">?</text>
+            </svg>
+          </div>
+          <div class="flow-text"><strong>模糊的需求</strong><br>提示词缺少结构，参数缺失</div>
+        </div>
+        <div class="compare-flow-item">
+          <div class="flow-icon">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+              <rect x="4" y="8" width="28" height="20" rx="2" stroke="#c44" stroke-width="1.5"/>
+              <line x1="12" y1="12" x2="24" y2="24" stroke="#c44" stroke-width="1.5"/>
+              <line x1="24" y1="12" x2="12" y2="24" stroke="#c44" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <div class="flow-text"><strong>输出不可控</strong><br>AI 视频结果随机，难以复现</div>
+        </div>
+      </div>
+
+      <!-- BRIDGE -->
+      <div class="compare-bridge">
+        <svg width="40" height="24" viewBox="0 0 40 24" fill="none">
+          <path d="M4 12h28m-6-6l6 6-6 6" stroke="#E8773A" stroke-width="2"/>
+        </svg>
+      </div>
+
+      <!-- RIGHT: Solution -->
+      <div class="compare-side solution">
+        <div class="compare-side-label">解决方案</div>
+        <div class="compare-flow-item">
+          <div class="flow-icon">
+            <svg class="clean-grid" width="36" height="36" viewBox="0 0 36 36">
+              <rect x="2" y="2" width="14" height="14" fill="rgba(232,119,58,0.2)" stroke="#E8773A" stroke-width="1"/>
+              <rect x="20" y="2" width="14" height="14" fill="rgba(232,119,58,0.15)" stroke="#E8773A" stroke-width="1"/>
+              <rect x="2" y="20" width="14" height="14" fill="rgba(232,119,58,0.15)" stroke="#E8773A" stroke-width="1"/>
+              <rect x="20" y="20" width="14" height="14" fill="rgba(232,119,58,0.2)" stroke="#E8773A" stroke-width="1"/>
+            </svg>
+          </div>
+          <div class="flow-text"><strong>结构化七要素</strong><br>每个分镜精确到 7 个维度</div>
+        </div>
+        <div class="compare-flow-item">
+          <div class="flow-icon">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+              <text x="18" y="22" text-anchor="middle" font-size="14" font-weight="700" fill="#E8773A" font-family="monospace">&lt;/&gt;</text>
+            </svg>
+          </div>
+          <div class="flow-text"><strong>精准提示词</strong><br>生成可直接使用的 prompt</div>
+        </div>
+        <div class="compare-flow-item">
+          <div class="flow-icon">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+              <rect x="4" y="8" width="28" height="20" rx="2" stroke="#E8773A" stroke-width="1.5"/>
+              <polyline points="10,22 15,16 20,19 26,12" stroke="#E8773A" stroke-width="1.5" fill="none"/>
+            </svg>
+          </div>
+          <div class="flow-text"><strong>可控输出</strong><br>高质量视频，风格稳定一致</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== WORKFLOW ==================== -->
+<section class="section-workflow">
+  <div class="container">
+    <div class="section-label reveal">工作流</div>
+    <h2 class="section-title reveal">五步从创意到分镜</h2>
+    <div class="workflow-track reveal">
+      <div class="wf-step">
+        <div class="wf-num">STEP 0</div>
+        <div class="wf-node">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E8773A" stroke-width="1.5">
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+            <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+          </svg>
+        </div>
+        <div class="wf-label">确认平台</div>
+        <div class="wf-desc">选择 Kling / Seedance / Sora，确定时长与参数约束</div>
+      </div>
+      <div class="wf-step">
+        <div class="wf-num">STEP 1</div>
+        <div class="wf-node">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E8773A" stroke-width="1.5">
+            <circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/>
+          </svg>
+        </div>
+        <div class="wf-label">理解想法</div>
+        <div class="wf-desc">深入分析用户创意，提取视觉关键词与情感基调</div>
+      </div>
+      <div class="wf-step">
+        <div class="wf-num">STEP 2</div>
+        <div class="wf-node">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E8773A" stroke-width="1.5">
+            <rect x="2" y="3" width="20" height="14" rx="1"/><line x1="2" y1="21" x2="22" y2="21"/>
+            <line x1="8" y1="3" x2="8" y2="17"/><line x1="14" y1="3" x2="14" y2="17"/>
+          </svg>
+        </div>
+        <div class="wf-label">构建分镜</div>
+        <div class="wf-desc">将创意拆分为逐镜头叙事，建立场景环境锚点</div>
+      </div>
+      <div class="wf-step">
+        <div class="wf-num">STEP 3</div>
+        <div class="wf-node">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E8773A" stroke-width="1.5">
+            <path d="M4 4h16v16H4z"/><path d="M8 12h8M12 8v8"/>
+          </svg>
+        </div>
+        <div class="wf-label">输出七要素</div>
+        <div class="wf-desc">为每个镜头生成完整的七维结构化描述</div>
+      </div>
+      <div class="wf-step">
+        <div class="wf-num">STEP 4</div>
+        <div class="wf-node">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E8773A" stroke-width="1.5">
+            <polyline points="16,3 21,3 21,8"/><path d="M21 3l-9 9"/>
+            <polyline points="16,21 21,21 21,16"/>
+          </svg>
+        </div>
+        <div class="wf-label">优化建议</div>
+        <div class="wf-desc">提供运镜替代方案、参数微调、一致性检查</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SEVEN ELEMENTS ==================== -->
+<section class="section-elements">
+  <div class="container">
+    <div class="section-label reveal">核心结构</div>
+    <h2 class="section-title reveal">分镜七要素</h2>
+    <div class="elements-grid" id="elementsGrid">
+      <!-- Card 1 -->
+      <div class="elem-card" data-delay="0">
+        <div class="elem-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <rect x="4" y="6" width="24" height="16" rx="1" stroke="#E8773A" stroke-width="1.5"/>
+            <polygon points="13,11 13,19 21,15" fill="#E8773A" opacity="0.6"/>
+            <line x1="10" y1="26" x2="22" y2="26" stroke="#E8773A" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="elem-name">风格核心</div>
+        <div class="elem-desc">电影锚点 + 流派 + 质感定义</div>
+      </div>
+      <!-- Card 2 -->
+      <div class="elem-card" data-delay="80">
+        <div class="elem-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <rect x="6" y="8" width="20" height="15" rx="2" stroke="#E8773A" stroke-width="1.5"/>
+            <circle cx="16" cy="15" r="5" stroke="#E8773A" stroke-width="1.5"/>
+            <circle cx="16" cy="15" r="2" fill="#E8773A" opacity="0.4"/>
+            <rect x="13" y="23" width="6" height="2" fill="#E8773A" opacity="0.4"/>
+          </svg>
+        </div>
+        <div class="elem-name">视觉基调</div>
+        <div class="elem-desc">画幅比 / 镜头类型 / 胶片机型</div>
+      </div>
+      <!-- Card 3 -->
+      <div class="elem-card" data-delay="160">
+        <div class="elem-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <circle cx="10" cy="12" r="6" fill="#E8773A" opacity="0.15" stroke="#E8773A" stroke-width="1"/>
+            <circle cx="22" cy="12" r="6" fill="#E8773A" opacity="0.25" stroke="#E8773A" stroke-width="1"/>
+            <circle cx="16" cy="22" r="6" fill="#E8773A" opacity="0.35" stroke="#E8773A" stroke-width="1"/>
+          </svg>
+        </div>
+        <div class="elem-name">色彩与影调</div>
+        <div class="elem-desc">色调 + 布光方案 + 滤镜风格</div>
+      </div>
+      <!-- Card 4 -->
+      <div class="elem-card" data-delay="240">
+        <div class="elem-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="16" r="10" stroke="#E8773A" stroke-width="1" stroke-dasharray="2 2"/>
+            <circle cx="16" cy="16" r="4" stroke="#E8773A" stroke-width="1.5"/>
+            <circle cx="16" cy="16" r="1.5" fill="#E8773A"/>
+          </svg>
+        </div>
+        <div class="elem-name">景别</div>
+        <div class="elem-desc">机位距离 / 人物比例 / 拍摄方位</div>
+      </div>
+      <!-- Card 5 -->
+      <div class="elem-card" data-delay="320">
+        <div class="elem-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <rect x="5" y="5" width="22" height="22" stroke="#E8773A" stroke-width="1" stroke-dasharray="3 3"/>
+            <line x1="16" y1="5" x2="16" y2="27" stroke="#E8773A" stroke-width="0.8" opacity="0.5"/>
+            <line x1="5" y1="16" x2="27" y2="16" stroke="#E8773A" stroke-width="0.8" opacity="0.5"/>
+            <rect x="10" y="8" width="6" height="8" fill="#E8773A" opacity="0.3"/>
+          </svg>
+        </div>
+        <div class="elem-name">构图</div>
+        <div class="elem-desc">主体位置 + 前景 / 中景 / 背景</div>
+      </div>
+      <!-- Card 6 -->
+      <div class="elem-card" data-delay="400">
+        <div class="elem-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <rect x="8" y="6" width="16" height="12" rx="1" stroke="#E8773A" stroke-width="1.5"/>
+            <path d="M6 22l4-4h12l4 4" stroke="#E8773A" stroke-width="1.5"/>
+            <path d="M12 18l2-4 2 4" stroke="#E8773A" stroke-width="1" opacity="0.5"/>
+          </svg>
+        </div>
+        <div class="elem-name">运镜手法</div>
+        <div class="elem-desc">焦距 + 光圈 + 速度 + 方向</div>
+      </div>
+      <!-- Card 7 -->
+      <div class="elem-card" data-delay="480">
+        <div class="elem-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <circle cx="12" cy="12" r="3" stroke="#E8773A" stroke-width="1.5"/>
+            <path d="M9 9q-3-6 3-6t3 6" stroke="#E8773A" stroke-width="1" opacity="0.5"/>
+            <rect x="20" y="18" width="6" height="8" rx="1" stroke="#E8773A" stroke-width="1" opacity="0.6"/>
+            <line x1="16" y1="24" x2="20" y2="20" stroke="#E8773A" stroke-width="1" opacity="0.4"/>
+          </svg>
+        </div>
+        <div class="elem-name">画面内容</div>
+        <div class="elem-desc">角色姿态 + 道具 + 光影描述</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SCENE FRAME MECHANISM ==================== -->
+<section class="section-scene">
+  <div class="container">
+    <div class="section-label reveal">一致性机制</div>
+    <h2 class="section-title reveal">场景建立帧</h2>
+    <div class="scene-demo reveal">
+      <!-- BEFORE -->
+      <div class="scene-panel before">
+        <div class="scene-panel-title">Before — 各自描述环境</div>
+        <div class="scene-frames">
+          <div class="scene-frame"><div class="scene-frame-bar"></div><div class="scene-frame-label">Shot 1</div></div>
+          <div class="scene-frame"><div class="scene-frame-bar"></div><div class="scene-frame-label">Shot 2</div></div>
+          <div class="scene-frame"><div class="scene-frame-bar"></div><div class="scene-frame-label">Shot 3</div></div>
+          <div class="scene-frame"><div class="scene-frame-bar"></div><div class="scene-frame-label">Shot 4</div></div>
+        </div>
+        <div style="margin-top:16px;font-size:13px;color:#888;">每个分镜独立描述环境，导致色调、光影、空间跳变</div>
+      </div>
+      <!-- AFTER -->
+      <div class="scene-panel after">
+        <div class="scene-panel-title">After — 统一环境锚点</div>
+        <div class="scene-frames">
+          <div class="scene-frame"><div class="scene-frame-bar"></div><div class="scene-frame-label">Shot 1</div></div>
+          <div class="scene-frame"><div class="scene-frame-bar"></div><div class="scene-frame-label">Shot 2</div></div>
+          <div class="scene-frame"><div class="scene-frame-bar"></div><div class="scene-frame-label">Shot 3</div></div>
+          <div class="scene-frame"><div class="scene-frame-bar"></div><div class="scene-frame-label">Shot 4</div></div>
+        </div>
+        <div class="scene-anchor">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#E8773A" stroke-width="1.5">
+            <circle cx="9" cy="9" r="7"/><path d="M9 5v4l3 2"/>
+          </svg>
+          先建立统一环境锚点，所有分镜与锚点对齐 → 环境一致
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== PLATFORMS ==================== -->
+<section class="section-platforms">
+  <div class="container">
+    <div class="section-label reveal">支持平台</div>
+    <h2 class="section-title reveal">适配三大 AI 视频平台</h2>
+    <div class="platforms-grid reveal">
+      <div class="platform-card">
+        <div class="platform-name">Kling</div>
+        <div class="platform-duration">最长 5 秒</div>
+        <ul class="platform-specs">
+          <li>画幅 <span>16:9 / 9:16 / 1:1</span></li>
+          <li>模式 <span>标准 / 专业</span></li>
+          <li>特点 <span>运镜控制精确</span></li>
+        </ul>
+      </div>
+      <div class="platform-card">
+        <div class="platform-name">Seedance</div>
+        <div class="platform-duration">最长 15 秒</div>
+        <ul class="platform-specs">
+          <li>画幅 <span>16:9 / 9:16</span></li>
+          <li>模式 <span>标准 / 高清</span></li>
+          <li>特点 <span>叙事节奏更好</span></li>
+        </ul>
+      </div>
+      <div class="platform-card">
+        <div class="platform-name">Sora</div>
+        <div class="platform-duration">最长 60 秒</div>
+        <ul class="platform-specs">
+          <li>画幅 <span>16:9 / 9:16 / 1:1</span></li>
+          <li>模式 <span>标准 / 高清</span></li>
+          <li>特点 <span>复杂叙事场景</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer>
+  <div class="container">
+    <div class="footer-links">
+      <a href="https://github.com/ouxxyy/storyboard-scavenger" target="_blank">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+        </svg>
+        GitHub
+      </a>
+      <a href="https://github.com/ouxxyy/storyboard-scavenger" target="_blank">
+        storyboard-scavenger
+      </a>
+    </div>
+    <div class="footer-copy">MIT License</div>
+  </div>
+</footer>
+
+<!-- ==================== JS ==================== -->
+<script>
+// Scroll-triggered reveal
+(function() {
+  var reveals = document.querySelectorAll('.reveal');
+  var elemCards = document.querySelectorAll('.elem-card');
+
+  function checkReveal() {
+    var windowH = window.innerHeight;
+    reveals.forEach(function(el) {
+      var top = el.getBoundingClientRect().top;
+      if (top < windowH - 80) {
+        el.classList.add('visible');
+      }
+    });
+    elemCards.forEach(function(el) {
+      var top = el.getBoundingClientRect().top;
+      if (top < windowH - 60) {
+        var delay = parseInt(el.getAttribute('data-delay')) || 0;
+        setTimeout(function() { el.classList.add('visible'); }, delay);
+      }
+    });
+  }
+
+  window.addEventListener('scroll', checkReveal, { passive: true });
+  window.addEventListener('load', checkReveal);
+  // Trigger once immediately for above-fold content
+  checkReveal();
+})();
+</script>
+
+</body>
+</html>
