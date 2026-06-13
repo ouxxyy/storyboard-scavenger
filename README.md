@@ -96,4 +96,3 @@ MIT
 
 ---
 
-> Made with ❤️ by [花叔](https://x.com/AlchainHust) · Powered by [Hermes Agent](https://hermes-agent.nousresearch.com)
