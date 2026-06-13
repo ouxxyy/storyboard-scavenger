@@ -421,8 +421,10 @@ body {
 .section-platforms { padding: 100px 0; }
 .platforms-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
+  max-width: 700px;
+  margin: 0 auto;
 }
 .platform-card {
   background: var(--bg-card);
@@ -659,7 +661,7 @@ footer {
           </svg>
         </div>
         <div class="wf-label">确认平台</div>
-        <div class="wf-desc">选择 Kling / Seedance / Sora，确定时长与参数约束</div>
+        <div class="wf-desc">选择 Kling / Seedance，确定时长与参数约束</div>
       </div>
       <div class="wf-step">
         <div class="wf-num">STEP 1</div>
@@ -845,7 +847,7 @@ footer {
 <section class="section-platforms">
   <div class="container">
     <div class="section-label reveal">支持平台</div>
-    <h2 class="section-title reveal">适配三大 AI 视频平台</h2>
+    <h2 class="section-title reveal">适配 AI 视频平台</h2>
     <div class="platforms-grid reveal">
       <div class="platform-card">
         <div class="platform-name">Kling</div>
@@ -863,15 +865,6 @@ footer {
           <li>画幅 <span>16:9 / 9:16</span></li>
           <li>模式 <span>标准 / 高清</span></li>
           <li>特点 <span>叙事节奏更好</span></li>
-        </ul>
-      </div>
-      <div class="platform-card">
-        <div class="platform-name">Sora</div>
-        <div class="platform-duration">最长 60 秒</div>
-        <ul class="platform-specs">
-          <li>画幅 <span>16:9 / 9:16 / 1:1</span></li>
-          <li>模式 <span>标准 / 高清</span></li>
-          <li>特点 <span>复杂叙事场景</span></li>
         </ul>
       </div>
     </div>
