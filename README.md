@@ -96,9 +96,23 @@ Step 4: 优化建议 + 特殊镜头技巧
 
 ## 使用方式
 
-本 Skill 设计为 AI Agent 工具链的一部分。将 `SKILL.md` 加载到你的 Agent 上下文中，Agent 即可按照标准流程生成结构化分镜。
+### 装进你的 AI Agent
 
-也可以直接阅读 `SKILL.md` 作为写作方法论参考。
+任何支持 `SKILL.md` 技能约定的 Agent 都能使用它。以常见的用户级技能目录为例：
+
+```bash
+git clone https://github.com/ouxxyy/storyboard-scavenger.git ~/.agents/skills/storyboard-scavenger
+```
+
+装好后对 Agent 说「帮我把这个想法做成 AI 视频分镜」或直接提到可灵 / 即梦，Skill 会自动接管，按 Step 0–4 的流程走完并输出七要素分镜。
+
+### 当作写作手册
+
+不装 Agent 也可以直接读：
+
+- [`SKILL.md`](SKILL.md) —— 完整方法论（主入口）
+- [`quick-reference.md`](quick-reference.md) —— 快速参考卡
+- [`examples/example-prompts.md`](examples/example-prompts.md) —— 实战案例集
 
 ## 可视化说明
 
@@ -116,6 +130,21 @@ Step 4: 优化建议 + 特殊镜头技巧
 | v2.0 | 2026-06-07 | 七要素结构化 + 38种运镜库 + Seedance 2.0 提示词模式 |
 | v1.0 | 2026-04-11 | 初始版本 |
 
+## 作者
+
+作者全平台同名：**欧八同学**。
+
+- 微信公众号：扫码关注
+- 抖音：[搜索“欧八同学”](https://www.douyin.com/search/%E6%AC%A7%E5%85%AB%E5%90%8C%E5%AD%A6)
+- 小红书：[搜索“欧八同学”](https://www.xiaohongshu.com/search_result?keyword=%E6%AC%A7%E5%85%AB%E5%90%8C%E5%AD%A6)
+- X：[搜索“欧八同学”](https://x.com/search?q=%E6%AC%A7%E5%85%AB%E5%90%8C%E5%AD%A6&src=typed_query)
+
+<p align="center">
+  <img src="assets/wechat-qr.jpg" alt="欧八同学微信公众号二维码" width="260">
+</p>
+
+如果这个 Skill 帮你拍出了满意的视频，欢迎点个 Star；分镜翻车的案例也欢迎提 Issue，附上你的提示词和生成结果链接即可。
+
 ## License
 
-MIT
+[MIT](LICENSE)
