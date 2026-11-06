@@ -1,0 +1,21 @@
+{
+  "name": "storyboard-scavenger",
+  "version": "1.0.0",
+  "description": "Storyboard Scavenger：AI 视频分镜与提示词生成 Skill，提供可灵 Kling、即梦 Seedance、Veo、Sora 七要素分镜工作流",
+  "author": {
+    "name": "欧八同学 (ouxxyy)",
+    "url": "https://github.com/ouxxyy/ouba-classmate"
+  },
+  "repository": "https://github.com/ouxxyy/storyboard-scavenger",
+  "homepage": "https://github.com/ouxxyy/ouba-classmate",
+  "license": "MIT",
+  "skills": "./",
+  "keywords": [
+    "storyboard",
+    "kling",
+    "seedance",
+    "ai-video",
+    "claude-skill",
+    "ouba-classmate"
+  ]
+}

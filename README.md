@@ -1,6 +1,8 @@
 # Storyboard Scavenger｜AI 视频分镜与提示词生成 Skill
 
-> 把创意、参考图或音乐想法整理成 AI 视频分镜提示词，提供可灵 Kling 与即梦 Seedance 的专门工作流。
+> 📦 **本项目属于 [ouba-classmate 套件](https://github.com/ouxxyy/ouba-classmate)**：[一行安装全部 Skill](https://github.com/ouxxyy/ouba-classmate#install) · [查看《中文 AI 求职 Skill 公开横评》](https://github.com/ouxxyy/ouba-classmate/tree/main/benchmark) · [各视频模型专属分镜指南 (`models/`)](models/) · [更新日志](CHANGELOG.md)
+
+> 把创意、参考图或音乐想法整理成 AI 视频分镜提示词，提供可灵 Kling、即梦 Seedance、Google Veo 与 OpenAI Sora 的专门工作流。
 
 <p align="center">
   <img src="img-hero.png" alt="Storyboard Scavenger：把创意整理成 AI 视频分镜与七要素提示词" width="720">
