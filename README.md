@@ -1,5 +1,20 @@
 # Storyboard Scavenger｜AI 视频分镜与提示词生成 Skill
 
+<!-- discovery:start -->
+## AI 视频分镜与可灵、即梦提示词生成
+
+**怎样把一个视频创意拆成可灵、即梦或 Veo 可用的分镜提示词？** 先建立环境与角色锚点，再按风格、影调、景别、构图、运镜等七要素组织逐镜头提示词，按所选平台适配。
+
+AI video storyboard and prompts for Kling, Seedance, Veo and Sora.
+
+**开始使用：** [安装 Skill](#quick-start) · [平台工作流](models/) · [分镜案例](examples/example-prompts.md)。
+
+**使用边界：** 主要交付分镜与提示词；视频生成平台的可用性、费用和最终画面效果需另行确认。
+
+[按任务浏览欧八同学的全部工具](https://github.com/ouxxyy/ouba-classmate#按需求找)；如果本项目有帮助，欢迎收藏当前仓库。
+
+<!-- discovery:end -->
+
 <!-- hero:start -->
 
 <p>
