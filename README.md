@@ -7,12 +7,15 @@
 
 AI video storyboard and prompts for Kling, Seedance, Veo and Sora.
 
+**30 秒核心结论：** 7 要素单镜头结构 · 适配可灵 / 即梦 / Veo / Sora 4 大视频模型 · 38 种运镜字典 · MIT 开源 0 元 · 更新于 2026-11-21。
+
+**一键安装 / 收藏：** `npx skills add ouxxyy/ouba-classmate --skill storyboard-scavenger` ｜ `claude plugin marketplace add ouxxyy/ouba-classmate` ｜ `gh api -X PUT /user/starred/ouxxyy/storyboard-scavenger`
+
 **开始使用：** [安装 Skill](#quick-start) · [平台工作流](models/) · [分镜案例](examples/example-prompts.md)。
 
 **使用边界：** 主要交付分镜与提示词；视频生成平台的可用性、费用和最终画面效果需另行确认。
 
 [按任务浏览欧八同学的全部工具](https://github.com/ouxxyy/ouba-classmate#按需求找)；如果本项目有帮助，欢迎收藏当前仓库。
-
 <!-- discovery:end -->
 
 <!-- hero:start -->
